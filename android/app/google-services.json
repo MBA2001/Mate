@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "196834246801",
+    "project_id": "mate-20088",
+    "storage_bucket": "mate-20088.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196834246801:android:e0c9e37c2a7e91fc38bf30",
+        "android_client_info": {
+          "package_name": "com.mate.final_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196834246801-j1fvpsfqpjdh4fheguott6ahvr3526p7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6lfDCJ5Vj1IO_cS_OBcZu2aVwQ1-UkPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196834246801-j1fvpsfqpjdh4fheguott6ahvr3526p7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
