@@ -25,6 +25,7 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+  //TODO: Apply the functionallity to add the username to the user, check if passwords match
 
   @override
   Widget build(BuildContext context) {

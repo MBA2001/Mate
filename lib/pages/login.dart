@@ -56,7 +56,7 @@ class _LogInState extends State<LogIn> {
             ),
             ElevatedButton.icon(
               onPressed: () async {
-                //TODO: Check for the types of errors and show error texts based on the error
+                
                 try {
                   await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
                 } catch (e) {
