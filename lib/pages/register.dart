@@ -46,32 +46,32 @@ class _SignUpState extends State<SignUp> {
       ),
       body: Column(
         children: [
-            if (!keyboardOpen) Image.asset('assets/mate.png',scale: 3,),
-            SizedBox(height: 10,),
-            SimpleTextField(
-              Controller: usernameController, 
-              hintText: 'Username',
-              errorText: _validateName ? 'Username already in use' : null,
-              obscure: false,
-            ),
-            SimpleTextField(
-              Controller: emailController, 
-              errorText: _validate ? emailMessage : null,
-              hintText: 'Email',
-              obscure: false,
-            ),
-            SimpleTextField(
-              Controller: passwordController, 
-              errorText: _validatePassword? 'Password should be at least 6 characters' : null,
-              hintText: 'Password',
-              obscure: true,
-            ),
-            SimpleTextField(
-              Controller: ConfirmPassController, 
-              errorText: _validateConfirmPass? _passwordMessage:null,
-              hintText: 'Confirm Password',
-              obscure: true,
-            ),
+          if (!keyboardOpen) Image.asset('assets/mate.png',scale: 3,),
+          SizedBox(height: 10,),
+          SimpleTextField(
+            Controller: usernameController, 
+            hintText: 'Username',
+            errorText: _validateName ? 'Username already in use' : null,
+            obscure: false,
+          ),
+          SimpleTextField(
+            Controller: emailController, 
+            errorText: _validate ? emailMessage : null,
+            hintText: 'Email',
+            obscure: false,
+          ),
+          SimpleTextField(
+            Controller: passwordController, 
+            errorText: _validatePassword? 'Password should be at least 6 characters' : null,
+            hintText: 'Password',
+            obscure: true,
+          ),
+          SimpleTextField(
+            Controller: ConfirmPassController, 
+            errorText: _validateConfirmPass? _passwordMessage:null,
+            hintText: 'Confirm Password',
+            obscure: true,
+          ),
           ElevatedButton.icon(
             onPressed: () async {
           
