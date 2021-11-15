@@ -23,10 +23,12 @@ class AuthService {
       return _userFromFirebase(credential.user);
   }
 
-  createUserWithEmailAndPassword(String email,String password) async{
+  createUserWithEmailAndPassword(String email,String password,String name) async{
 
       final credential  = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      return _userFromFirebase(credential.user);
+      User? user = _userFromFirebase(credential.user);
+      if(user != null) user.createUser(name);
+      return user;
   }
 
   signOut() async{

@@ -66,10 +66,12 @@ class _LogInState extends State<LogIn> {
                   if(e.toString().contains('address is badly formatted')){
                     setState(() {
                       _validateEmail = true;
+                      _validatePass = false;
                     });
                   }else if(e.toString().contains('no user record corresponding to this identifier. The user may have been deleted') || e.toString().contains('The password is invalid')){
                     setState(() {
                       _validatePass = true;
+                      _validateEmail = false;
                       _validatePassText = 'Wrong email or password';
                     });
                   }
