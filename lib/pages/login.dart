@@ -21,13 +21,39 @@ class _LogInState extends State<LogIn> {
   bool _validatePass = false;
   String _validatePassText = '';
 
-
-
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  _signInValidation(authservice) async {
+    try {
+      await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
+    } catch (e) {
+      print(e.toString());
+      _validateEmail = false;
+      _validatePass = false;
+      if(e.toString().contains('address is badly formatted')){
+        setState(() {
+          _validateEmail = true;
+          _validatePass = false;
+        });
+      }else if(e.toString().contains('no user record corresponding to this identifier. The user may have been deleted') || e.toString().contains('The password is invalid')){
+        setState(() {
+          _validatePass = true;
+          _validateEmail = false;
+          _validatePassText = 'Wrong email or password';
+        });
+      }else if(e.toString().contains('Given String is empty or null')){
+        setState(() {
+          _validateEmail = false;
+          _validatePass = true;
+          _validatePassText = 'email and password cannot be empty';
+        });
+      }
+    }
   }
 
   @override
@@ -55,28 +81,7 @@ class _LogInState extends State<LogIn> {
               obscure: true,
             ),
             ElevatedButton.icon(
-              onPressed: () async {
-                
-                try {
-                  await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
-                } catch (e) {
-                  print(e.toString());
-                  _validateEmail = false;
-                  _validatePass = false;
-                  if(e.toString().contains('address is badly formatted')){
-                    setState(() {
-                      _validateEmail = true;
-                      _validatePass = false;
-                    });
-                  }else if(e.toString().contains('no user record corresponding to this identifier. The user may have been deleted') || e.toString().contains('The password is invalid')){
-                    setState(() {
-                      _validatePass = true;
-                      _validateEmail = false;
-                      _validatePassText = 'Wrong email or password';
-                    });
-                  }
-                }
-              },
+              onPressed: ()async => await _signInValidation(authservice),
               icon:const  Icon(Icons.login), 
               label: const Text('login')
             ),
@@ -86,7 +91,6 @@ class _LogInState extends State<LogIn> {
               }, 
               child: const Text('Register'),
             ),
-      
           ],
         ),
       ),

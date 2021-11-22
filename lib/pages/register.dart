@@ -31,6 +31,79 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+  _signUpValidation(authService) async{      
+    if(passwordController.text.trim() == '' || ConfirmPassController.text.trim() == '' || usernameController.text.trim() == '' || emailController.text.trim() == ''){
+      setState(() {
+        _passwordMessage = 'A field or more is empty, All fields are required';
+        _validateConfirmPass = true;
+        _validate = false;
+        _validatePassword = false;
+        _validateName = false;
+      });
+      return;
+    }else if(passwordController.text != ConfirmPassController.text){
+      setState(() {
+        _passwordMessage = 'confirm password must match password';
+        _validateConfirmPass = true;
+        _validate = false;
+        _validatePassword = false;
+        _validateName = false;
+      });
+      return;
+    }
+    try{
+      QuerySnapshot<Map<String, dynamic>> database = await FirebaseFirestore.instance.collection('users').get();
+      List<Map<String, dynamic>> data = database.docs.map((doc) => doc.data()).toList();  
+      for ( var item in data){
+        if(item['username'] == usernameController.text){
+          setState(() {
+            _validateName = true;
+            _validateConfirmPass = false;
+            _validate = false;
+            _validatePassword = false;
+          });
+          return;
+        }
+      }
+    }catch(e){
+      print(e);
+      return;
+    }
+    setState(() {
+      _validateConfirmPass = false;
+    });
+
+    try{ 
+      await authService.createUserWithEmailAndPassword(emailController.text, passwordController.text,usernameController.text);
+      Navigator.pop(context);
+    }catch(e){
+      if(e.toString().contains('email address is already in use')){
+        setState(() {
+          emailMessage = 'Email address is already in use';
+          _validate = true;
+          _validatePassword = false;
+          _validateConfirmPass = false;
+          _validateName = false;
+        });
+      }else if(e.toString().contains('The email address is badly formatted')){
+        setState(() {
+          emailMessage = 'Email address is badly formatted';
+          _validate = true;
+          _validatePassword = false;
+          _validateConfirmPass = false;
+          _validateName = false;
+        });
+      }else if(e.toString().contains('Password should be at least 6 characters')){
+        setState(() {
+          _validatePassword = true;
+          _validate = false;
+          _validateConfirmPass = false;
+          _validateName = false;
+        });
+      }
+    }
+  }
+
   //TODO: Apply the functionallity to add the username to the user, check if passwords match
 
   @override
@@ -73,80 +146,7 @@ class _SignUpState extends State<SignUp> {
             obscure: true,
           ),
           ElevatedButton.icon(
-            onPressed: () async {
-          
-              if(passwordController.text.trim() == '' || ConfirmPassController.text.trim() == '' || usernameController.text.trim() == '' || emailController.text.trim() == ''){
-                setState(() {
-                  _passwordMessage = 'A field or more is empty, All fields are required';
-                  _validateConfirmPass = true;
-                  _validate = false;
-                  _validatePassword = false;
-                  _validateName = false;
-                });
-                return;
-              }else if(passwordController.text != ConfirmPassController.text){
-                setState(() {
-                  _passwordMessage = 'confirm password must match password';
-                  _validateConfirmPass = true;
-                  _validate = false;
-                  _validatePassword = false;
-                  _validateName = false;
-                });
-                return;
-              }
-              try{
-                QuerySnapshot<Map<String, dynamic>> database = await FirebaseFirestore.instance.collection('users').get();
-                List<Map<String, dynamic>> data = database.docs.map((doc) => doc.data()).toList();  
-                for ( var item in data){
-                  if(item['username'] == usernameController.text){
-                    setState(() {
-                      _validateName = true;
-                      _validateConfirmPass = false;
-                      _validate = false;
-                      _validatePassword = false;
-                    });
-                    return;
-                  }
-                }
-              }catch(e){
-                print(e);
-                return;
-              }
-              setState(() {
-                _validateConfirmPass = false;
-              });
-  
-              try{
-                
-                await authService.createUserWithEmailAndPassword(emailController.text, passwordController.text,usernameController.text);
-                Navigator.pop(context);
-              }catch(e){
-                if(e.toString().contains('email address is already in use')){
-                  setState(() {
-                    emailMessage = 'Email address is already in use';
-                    _validate = true;
-                    _validatePassword = false;
-                    _validateConfirmPass = false;
-                    _validateName = false;
-                  });
-                }else if(e.toString().contains('The email address is badly formatted')){
-                  setState(() {
-                    emailMessage = 'Email address is badly formatted';
-                    _validate = true;
-                    _validatePassword = false;
-                    _validateConfirmPass = false;
-                    _validateName = false;
-                  });
-                }else if(e.toString().contains('Password should be at least 6 characters')){
-                  setState(() {
-                    _validatePassword = true;
-                    _validate = false;
-                    _validateConfirmPass = false;
-                    _validateName = false;
-                  });
-                }
-              }
-            },
+            onPressed:()async => (await _signUpValidation(authService)),
             icon:const  Icon(Icons.app_registration), 
             label: const Text('Register')
           ),
