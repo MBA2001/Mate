@@ -14,8 +14,8 @@ class AuthService {
   }
 
 
-  Stream<User?>? get user {
-    return _auth.authStateChanges().map(_userFromFirebase);
+  User get user {
+    return _userFromFirebase(auth.FirebaseAuth.instance.currentUser)!;
   }
 
   signInWithEmailAndPassword(String email,String password) async{

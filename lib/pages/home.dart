@@ -20,11 +20,9 @@ class _HomeState extends State<Home> {
 
     final authService = Provider.of<AuthService>(context);
     if(firstBuild){
-      authService.user?.first.then((value){
-        setState(() {
-          user = value;
-          firstBuild = false;
-        });
+      setState(() {
+        user = authService.user;
+        firstBuild = false;
       });
     }
     return Scaffold(
