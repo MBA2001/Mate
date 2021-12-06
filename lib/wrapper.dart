@@ -11,21 +11,22 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final authService = Provider.of<AuthService>(context);
 
     return StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder:(_,snapshot) {
-        if(snapshot.hasData){
-          return Home(); 
-        }else if(snapshot.connectionState == ConnectionState.waiting){
-          return const Scaffold(body: Center(child: CircularProgressIndicator()),);
-        }else if(snapshot.hasError){
-          return Text('Something wrong occured');
-        }else{
-          return LogIn();
-        }
-      });
+        stream: authService.user,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            return Home();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Something wrong occured');
+          } else {
+            return LogIn();
+          }
+        });
   }
 }
