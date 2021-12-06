@@ -30,7 +30,7 @@ class _LogInState extends State<LogIn> {
 
   _signInValidation(authservice,User user) async {
     try {
-      user.getUser(emailController.text);
+      await user.getUser(emailController.text);
       await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
     } catch (e) {
       print(e.toString());

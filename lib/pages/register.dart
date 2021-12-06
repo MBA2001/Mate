@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../widgets/textfield.dart';
 import 'package:final_project/models/user.dart';
 
-
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
 
@@ -81,7 +80,7 @@ class _SignUpState extends State<SignUp> {
     });
 
     try {
-      User user = Provider.of<User>(context,listen: false);
+      User user = Provider.of<User>(context, listen: false);
       user.initializeUser(emailController.text, usernameController.text);
       auth.User data = await authService.createUserWithEmailAndPassword(
           emailController.text, passwordController.text);
@@ -92,7 +91,7 @@ class _SignUpState extends State<SignUp> {
         'image':
             'https://firebasestorage.googleapis.com/v0/b/mate-20088.appspot.com/o/no-img.png?alt=media&token=cdda0bcb-2b74-47f9-a1d5-591cca5ca625',
       });
-      
+
       Navigator.pop(context);
     } catch (e) {
       if (e.toString().contains('email address is already in use')) {
