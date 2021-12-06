@@ -1,3 +1,4 @@
+import 'package:final_project/models/user.dart';
 import '../services/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +14,17 @@ class _HomeState extends State<Home> {
   bool firstBuild = true;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    if (firstBuild) {}
+    User user = Provider.of<User>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('home'),
@@ -30,6 +39,9 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 20,
               ),
+              Text(user.email!),
+              user.image!,
+              Text(user.username!),
               ElevatedButton.icon(
                 onPressed: () async {
                   await authService.signOut();

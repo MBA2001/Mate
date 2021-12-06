@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -6,13 +7,16 @@ class AuthService {
   Stream<User?> get user => _auth.authStateChanges();
 
   signInWithEmailAndPassword(String email, String password) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+    final credential = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return credential.user;
   }
 
   createUserWithEmailAndPassword(
-      String email, String password, String name) async {
-    await _auth.createUserWithEmailAndPassword(
+      String email, String password) async {
+    final credential = await _auth.createUserWithEmailAndPassword(
         email: email, password: password);
+    return credential.user;
   }
 
   signOut() async {

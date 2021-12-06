@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/textfield.dart';
 
-
+import 'package:final_project/models/user.dart';
 
 
 class LogIn extends StatefulWidget {
@@ -28,8 +28,9 @@ class _LogInState extends State<LogIn> {
     super.dispose();
   }
 
-  _signInValidation(authservice) async {
+  _signInValidation(authservice,User user) async {
     try {
+      user.getUser(emailController.text);
       await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
     } catch (e) {
       print(e.toString());
@@ -52,6 +53,12 @@ class _LogInState extends State<LogIn> {
           _validatePass = true;
           _validatePassText = 'email and password cannot be empty';
         });
+      }else{
+        setState(() {
+          _validateEmail = false;
+          _validatePass = true;
+          _validatePassText = 'something went wrong';
+        });
       }
     }
   }
@@ -60,6 +67,7 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     final authservice = Provider.of<AuthService>(context);
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom !=0 ;
+    User user = Provider.of<User>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -81,7 +89,7 @@ class _LogInState extends State<LogIn> {
               obscure: true,
             ),
             ElevatedButton.icon(
-              onPressed: ()async => await _signInValidation(authservice),
+              onPressed: ()async => await _signInValidation(authservice,user),
               icon:const  Icon(Icons.login), 
               label: const Text('login')
             ),

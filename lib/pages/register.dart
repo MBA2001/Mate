@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import '../services/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/textfield.dart';
+import 'package:final_project/models/user.dart';
+
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
@@ -78,8 +81,18 @@ class _SignUpState extends State<SignUp> {
     });
 
     try {
-      await authService.createUserWithEmailAndPassword(emailController.text,
-          passwordController.text, usernameController.text);
+      User user = Provider.of<User>(context,listen: false);
+      user.initializeUser(emailController.text, usernameController.text);
+      auth.User data = await authService.createUserWithEmailAndPassword(
+          emailController.text, passwordController.text);
+      user.addUID(data.uid);
+      await FirebaseFirestore.instance.collection('users').doc(data.uid).set({
+        'username': usernameController.text,
+        'email': emailController.text,
+        'image':
+            'https://firebasestorage.googleapis.com/v0/b/mate-20088.appspot.com/o/no-img.png?alt=media&token=cdda0bcb-2b74-47f9-a1d5-591cca5ca625',
+      });
+      
       Navigator.pop(context);
     } catch (e) {
       if (e.toString().contains('email address is already in use')) {
