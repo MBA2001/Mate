@@ -86,6 +86,7 @@ class _SignUpState extends State<SignUp> {
           emailController.text, passwordController.text);
       user.addUID(data.uid);
       await FirebaseFirestore.instance.collection('users').doc(data.uid).set({
+        'postNumber': 0,
         'username': usernameController.text,
         'email': emailController.text,
         'image':

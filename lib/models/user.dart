@@ -7,10 +7,12 @@ class User {
   String? email;
   String? username;
   String? image;
+  int? PostNumber;
   List<Map<String, dynamic>>? _users;
 
 
   initializeUser(String email, String username) {
+    this.PostNumber = 0;
     this.uid = uid;
     this.email = email;
     this.username = username;

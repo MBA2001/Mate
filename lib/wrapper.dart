@@ -1,4 +1,5 @@
 import 'package:final_project/pages/home.dart';
+import 'package:final_project/pages/logged_in.dart';
 import 'package:final_project/pages/login.dart';
 import 'package:final_project/services/authservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,7 @@ class Wrapper extends StatelessWidget {
         stream: authService.user,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            return Home();
+            return LoggedIn();
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),

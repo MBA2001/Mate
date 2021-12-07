@@ -17,54 +17,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    User user = Provider.of<User>(context);
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                      user.image!,
-                    ),
-                  ),
-                  SizedBox(height: 15,),
-                  Text(user.username!),
-                ],
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.pushNamed(context, '/profile');
-              },
-              leading: FaIcon(FontAwesomeIcons.userAlt),
-              title: Text('Profile'),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.pushNamed(context, '/search');
-              },
-              leading: FaIcon(FontAwesomeIcons.search),
-              title: Text('Search'),
-            ),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        title: const Text('home'),
-        centerTitle: true,
-      ),
-      body: Container(
+    return Container(
         margin: EdgeInsets.all(100),
         child: Center(
           child: Column(
@@ -83,7 +36,6 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
