@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import '../services/authservice.dart';
+import '../providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/textfield.dart';
@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
-  final ConfirmPassController = TextEditingController();
+  final confirmPassController = TextEditingController();
 
   @override
   void dispose() {
@@ -32,9 +32,9 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  _signUpValidation(authService) async {
+  _signUpValidation(userProvider) async {
     if (passwordController.text.trim() == '' ||
-        ConfirmPassController.text.trim() == '' ||
+        confirmPassController.text.trim() == '' ||
         usernameController.text.trim() == '' ||
         emailController.text.trim() == '') {
       setState(() {
@@ -45,7 +45,7 @@ class _SignUpState extends State<SignUp> {
         _validateName = false;
       });
       return;
-    } else if (passwordController.text != ConfirmPassController.text) {
+    } else if (passwordController.text != confirmPassController.text) {
       setState(() {
         _passwordMessage = 'confirm password must match password';
         _validateConfirmPass = true;
@@ -61,7 +61,7 @@ class _SignUpState extends State<SignUp> {
       List<Map<String, dynamic>> data =
           database.docs.map((doc) => doc.data()).toList();
       for (var item in data) {
-        if (item['username'] == usernameController.text) {
+        if (item['email'] == emailController.text) {
           setState(() {
             _validateName = true;
             _validateConfirmPass = false;
@@ -80,19 +80,8 @@ class _SignUpState extends State<SignUp> {
     });
 
     try {
-      User user = Provider.of<User>(context, listen: false);
-      user.initializeUser(emailController.text, usernameController.text);
-      auth.User data = await authService.createUserWithEmailAndPassword(
-          emailController.text, passwordController.text);
-      user.addUID(data.uid);
-      await FirebaseFirestore.instance.collection('users').doc(data.uid).set({
-        'postNumber': 0,
-        'username': usernameController.text,
-        'email': emailController.text,
-        'image':
-            'https://firebasestorage.googleapis.com/v0/b/mate-20088.appspot.com/o/no-img.png?alt=media&token=cdda0bcb-2b74-47f9-a1d5-591cca5ca625',
-      });
-
+      await userProvider.createUser(emailController.text,
+          passwordController.text, usernameController.text);
       Navigator.pop(context);
     } catch (e) {
       if (e.toString().contains('email address is already in use')) {
@@ -126,11 +115,11 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  //TODO: Apply the functionallity to add the username to the user, check if passwords match
+
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
@@ -170,13 +159,13 @@ class _SignUpState extends State<SignUp> {
             obscure: true,
           ),
           SimpleTextField(
-            Controller: ConfirmPassController,
+            Controller: confirmPassController,
             errorText: _validateConfirmPass ? _passwordMessage : null,
             hintText: 'Confirm Password',
             obscure: true,
           ),
           ElevatedButton.icon(
-              onPressed: () async => (await _signUpValidation(authService)),
+              onPressed: () async => (await _signUpValidation(userProvider)),
               icon: const Icon(Icons.app_registration),
               label: const Text('Register')),
         ],

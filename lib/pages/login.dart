@@ -1,10 +1,9 @@
-import '../services/authservice.dart';
+import '../providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/textfield.dart';
 
 import 'package:final_project/models/user.dart';
-
 
 class LogIn extends StatefulWidget {
   LogIn({Key? key}) : super(key: key);
@@ -14,7 +13,6 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _validateEmail = false;
@@ -28,32 +26,33 @@ class _LogInState extends State<LogIn> {
     super.dispose();
   }
 
-  _signInValidation(authservice,User user) async {
+  _signInValidation(authservice) async {
     try {
-      await user.getUser(emailController.text);
-      await authservice.signInWithEmailAndPassword(emailController.text, passwordController.text);
+      await authservice.signIn(emailController.text, passwordController.text);
     } catch (e) {
       print(e.toString());
       _validateEmail = false;
       _validatePass = false;
-      if(e.toString().contains('address is badly formatted')){
+      if (e.toString().contains('address is badly formatted')) {
         setState(() {
           _validateEmail = true;
           _validatePass = false;
         });
-      }else if(e.toString().contains('no user record corresponding to this identifier. The user may have been deleted') || e.toString().contains('The password is invalid')){
+      } else if (e.toString().contains(
+              'no user record corresponding to this identifier. The user may have been deleted') ||
+          e.toString().contains('The password is invalid')) {
         setState(() {
           _validatePass = true;
           _validateEmail = false;
           _validatePassText = 'Wrong email or password';
         });
-      }else if(e.toString().contains('Given String is empty or null')){
+      } else if (e.toString().contains('Given String is empty or null')) {
         setState(() {
           _validateEmail = false;
           _validatePass = true;
           _validatePassText = 'email and password cannot be empty';
         });
-      }else{
+      } else {
         setState(() {
           _validateEmail = false;
           _validatePass = true;
@@ -65,38 +64,44 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    final authservice = Provider.of<AuthService>(context);
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom !=0 ;
-    User user = Provider.of<User>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 20,),
-            if (!keyboardOpen) Image.asset('assets/mate.png',scale: 2,),
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 20,
+            ),
+            if (!keyboardOpen)
+              Image.asset(
+                'assets/mate.png',
+                scale: 2,
+              ),
+            const SizedBox(
+              height: 40,
+            ),
             SimpleTextField(
-              Controller: emailController, 
+              Controller: emailController,
               errorText: _validateEmail ? 'Please enter a valid email' : null,
               hintText: 'email',
               obscure: false,
             ),
             SimpleTextField(
-              Controller: passwordController, 
+              Controller: passwordController,
               errorText: _validatePass ? _validatePassText : null,
               hintText: 'password',
               obscure: true,
             ),
             ElevatedButton.icon(
-              onPressed: ()async => await _signInValidation(authservice,user),
-              icon:const  Icon(Icons.login), 
-              label: const Text('login')
-            ),
+                onPressed: () async => await _signInValidation(userProvider),
+                icon: const Icon(Icons.login),
+                label: const Text('login')),
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushNamed(context, '/register');
-              }, 
+              },
               child: const Text('Register'),
             ),
           ],

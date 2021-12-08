@@ -1,26 +1,29 @@
-import 'package:final_project/services/authservice.dart';
+import 'package:final_project/models/user.dart';
+import 'package:final_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
+  const Settings({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final authservice = Provider.of<AuthService>(context);
+    final authservice = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: const Text("Settings"),
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 150,
                 ),
                 ElevatedButton(
@@ -28,7 +31,7 @@ class Settings extends StatelessWidget {
                       Navigator.pushNamed(context, '/account_settings');
                     },
                     child: const Text('Account settings')),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(

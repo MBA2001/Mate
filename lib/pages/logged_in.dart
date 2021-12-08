@@ -1,5 +1,5 @@
 import 'package:final_project/models/user.dart';
-import 'package:final_project/services/authservice.dart';
+import 'package:final_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -26,62 +26,20 @@ class _LoggedInState extends State<LoggedIn> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    
     return Scaffold(
-      // drawer: Drawer(
-      //   child: ListView(
-      //     children: [
-      //       DrawerHeader(
-      //         child: Container(
-      //           alignment: Alignment.topLeft,
-      //           child: Column(
-      //             children: [
-      //               CircleAvatar(
-      //                 radius: 30,
-      //                 // backgroundImage: NetworkImage(
-      //                   // user.image!,
-      //                 // ),
-      //               ),
-      //               SizedBox(
-      //                 height: 15,
-      //               ),
-      //               // Text(
-      //                 // user.username!,
-      //               //   style: TextStyle(
-      //               //     fontSize: 20,
-      //               //     fontWeight: FontWeight.bold,
-      //               //   ),
-      //               // ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //       ListTile(
-      //         onTap: () {
-      //           Navigator.pushNamed(context, '/profile');
-      //         },
-      //         leading: FaIcon(FontAwesomeIcons.userAlt),
-      //         title: Text('Profile'),
-      //       ),
-      //       ListTile(
-      //         onTap: () {
-      //           Navigator.pushNamed(context, '/settings');
-      //         },
-      //         leading: Icon(Icons.settings),
-      //         title: Text('Settings'),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+    
       appBar: AppBar(
         title: Image.asset(
           'assets/mate.png',
           scale: 3,
         ),
         actions: [
-          IconButton(onPressed: (){
-            Navigator.pushNamed(context, '/settings');
-          }, icon:const Icon(Icons.settings)),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+              icon: const Icon(Icons.settings)),
         ],
         centerTitle: true,
         backgroundColor: Colors.grey[850],

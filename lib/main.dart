@@ -4,7 +4,7 @@ import 'package:final_project/pages/login.dart';
 import 'package:final_project/pages/profile.dart';
 import 'package:final_project/pages/register.dart';
 import 'package:final_project/pages/search.dart';
-import 'package:final_project/services/authservice.dart';
+import 'package:final_project/providers/user_provider.dart';
 import 'package:final_project/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,16 +27,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthService>(
-          create: (_) => AuthService(),
+        ChangeNotifierProvider<UserProvider>(
+          create: (_) => UserProvider(),
         ),
-        Provider<User>(create: (_) => User()),
+        
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
-          brightness: Brightness.dark
+          brightness: Brightness.dark,
         ),
         initialRoute: '/',
         routes: {
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LogIn(),
           '/register': (context) => SignUp(),
           '/settings': (context) => Settings(),
-          '/account_settings' : (context) => Accountsettings(),
+          '/account_settings': (context) => Accountsettings(),
           '/profile': (context) => Profile(),
           '/search': (context) => Search(),
         },
