@@ -66,8 +66,10 @@ class UserProvider extends ChangeNotifier {
   }
 
   signOut() async {
+
     await _auth.signOut();
     _user = null;
+    
     notifyListeners();
   }
 }

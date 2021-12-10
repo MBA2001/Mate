@@ -1,4 +1,5 @@
 import 'package:final_project/models/user.dart';
+import 'package:final_project/providers/posts_provider.dart';
 import 'package:final_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authservice = Provider.of<UserProvider>(context);
+    final postsProvider = Provider.of<PostsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
@@ -36,6 +38,7 @@ class Settings extends StatelessWidget {
                 ),
                 ElevatedButton(
                     onPressed: () async {
+                      postsProvider.removeData();
                       await authservice.signOut();
                       Navigator.pop(context);
                     },

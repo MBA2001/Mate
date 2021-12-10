@@ -5,6 +5,7 @@ class Post {
   String creatorImage;
   int commentCount;
   int likeCount;
-
-  Post(this.title,this.body,this.creatorName,this.creatorImage,this.commentCount,this.likeCount);
+  DateTime creationDate;
+  String id;
+  Post(this.id,this.title,this.body,this.creatorName,this.creatorImage,this.commentCount,this.likeCount,this.creationDate);
 }
