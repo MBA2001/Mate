@@ -22,8 +22,8 @@ class UserProvider extends ChangeNotifier {
       _users = data;
       for (var item in data) {
         if (item['email'] == email) {
-          _user =
-              User(item['uid'], item['email'], item['username'], item['image']);
+          _user = User(item['uid'], item['email'], item['username'],
+              item['image'], item['likes'] ?? []);
           notifyListeners();
           return;
         }
@@ -31,8 +31,8 @@ class UserProvider extends ChangeNotifier {
     } else {
       for (var item in _users!) {
         if (item['email'] == email) {
-          _user =
-              User(item['uid'], item['email'], item['username'], item['image']);
+          _user = User(item['uid'], item['email'], item['username'],
+              item['image'], item['likes'] ?? []);
           _users = null;
           notifyListeners();
           return;
@@ -43,8 +43,7 @@ class UserProvider extends ChangeNotifier {
     return credential.user;
   }
 
-  createUser(
-      String email, String password, String name) async {
+  createUser(String email, String password, String name) async {
     final credential = await _auth.createUserWithEmailAndPassword(
         email: email, password: password);
     String image =
@@ -58,18 +57,35 @@ class UserProvider extends ChangeNotifier {
       'email': email,
       'image': image,
       'uid': credential.user!.uid,
+      'likes': [],
     });
 
-    _user = User(credential.user!.uid, email, name, image);
-    notifyListeners();
+    _user = User(credential.user!.uid, email, name, image, []);
     return credential.user;
   }
 
-  signOut() async {
+  addLike(String id) async {
+    _user!.likes.add(id);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .update({'likes': _user!.likes});
+    notifyListeners();
+  }
 
+  removeLike(String id) async {
+    _user!.likes.remove(id);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .update({'likes': _user!.likes});
+    notifyListeners();
+  }
+
+  signOut() async {
     await _auth.signOut();
     _user = null;
-    
+
     notifyListeners();
   }
 }

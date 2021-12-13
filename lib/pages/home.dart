@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
         context: context,
         builder: (context,) {
           return AlertDialog(
-            title: Text('TextField AlertDemo'),
+            title: Text('Add Post'),
             content: Column(
               children: [
                 TextField(

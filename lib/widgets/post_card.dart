@@ -12,10 +12,44 @@ class PostCard extends StatelessWidget {
     required this.index,
     required this.post,
   }) : super(key: key);
-  
+
+  _alertDialog(context) {
+    return showDialog(
+        context: context,
+        builder: (
+          context,
+        ) {
+          return AlertDialog(
+            title: const Text('Delete'),
+            content: const Text("Are you sure u want to delete this post?"),
+            actions: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.remove),
+                label: const Text('No'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  final postsProvider =
+                      Provider.of<PostsProvider>(context, listen: false);
+                  postsProvider.deletePost(index);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.delete),
+                label: const Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
+
     return Card(
       elevation: 10,
       color: Colors.grey[700],
@@ -35,19 +69,21 @@ class PostCard extends StatelessWidget {
               // const SizedBox(width: 10,),
               Text(post.creatorName),
               // const SizedBox(width: 160,),
-              Provider.of<UserProvider>(context,listen: false).user!.username! == post.creatorName ? IconButton(
-                onPressed: () {
-                  PostsProvider posts = Provider.of<PostsProvider>(context,listen:false);
-                  posts.deletePost(index);
-                },
-                icon: const Icon(Icons.delete),
-              ) : const Opacity(
-                opacity: 0.0,
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.delete),
-                ),
-              ),
+              Provider.of<UserProvider>(context, listen: false)
+                          .user!
+                          .username! ==
+                      post.creatorName
+                  ? IconButton(
+                      onPressed: () => _alertDialog(context),
+                      icon: const Icon(Icons.delete),
+                    )
+                  : const Opacity(
+                      opacity: 0.0,
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.delete),
+                      ),
+                    ),
             ],
           ),
           // const SizedBox(height: 20,),
@@ -71,17 +107,39 @@ class PostCard extends StatelessWidget {
           ButtonBar(
             alignment: MainAxisAlignment.start,
             children: [
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.grey,
-                ),
-                label: Text(
-                  '${post.likeCount}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
+              user!.likes.contains(post.id)
+                  ? TextButton.icon(
+                      onPressed: () async {
+                        final postsProvider =
+                            Provider.of<PostsProvider>(context, listen: false);
+                        await postsProvider.removeLike(post.id, index);
+                        await userProvider.removeLike(post.id);
+                      },
+                      icon: const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
+                      label: Text(
+                        '${post.likeCount}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : TextButton.icon(
+                      onPressed: () async {
+                        final postsProvider =
+                            Provider.of<PostsProvider>(context, listen: false);
+                        await postsProvider.addLike(post.id, index);
+                        await userProvider.addLike(post.id);
+                      },
+                      icon: const Icon(
+                        Icons.favorite_border,
+                        color: Colors.grey,
+                      ),
+                      label: Text(
+                        '${post.likeCount}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
               TextButton.icon(
                 onPressed: () {},
                 icon: const Icon(

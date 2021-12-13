@@ -7,7 +7,7 @@ class User {
   String? email;
   String? username;
   String? image;
+  List likes;
 
-
-  User(this.uid,this.email,this.username,this.image);
+  User(this.uid,this.email,this.username,this.image,this.likes);
 }
