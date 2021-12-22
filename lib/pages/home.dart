@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
               TextButton(
                 child: const Text('Add Post'),
                 onPressed: () async {
-                  await postsProvider.addPost(titleController.text,bodyController.text,user.username!,user.image!);
+                  await postsProvider.addPost(titleController.text,bodyController.text,user.username,user.image);
                   titleController.clear();
                   bodyController.clear();
                   Navigator.of(context).pop();

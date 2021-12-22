@@ -5,42 +5,45 @@ import 'package:flutter/cupertino.dart';
 
 class UserProvider extends ChangeNotifier {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  User? _user = null;
-  List<Map<String, dynamic>>? _users;
+  User? _user;
+  final List<User> _users = [];
 
   User? get user => _user;
+  List<User> get users => _users;
 
   signIn(String email, String password) async {
     final credential = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
-    if (_users == null) {
+    if (_users.isEmpty) {
       QuerySnapshot<Map<String, dynamic>> database =
           await FirebaseFirestore.instance.collection('users').get();
 
       List<Map<String, dynamic>> data =
           database.docs.map((doc) => doc.data()).toList();
-      _users = data;
+      bool found = false;
       for (var item in data) {
         if (item['email'] == email) {
           _user = User(item['uid'], item['email'], item['username'],
-              item['image'], item['likes'] ?? []);
-          notifyListeners();
-          return;
+              item['image'], item['likes'] ?? [], item['following'] ?? []);
+          found = true;
         }
+        _users.add(User(item['uid'], item['email'], item['username'],
+            item['image'], item['likes'] ?? [], item['following'] ?? []));
+      }
+      if (found) {
+        notifyListeners();
+        return;
       }
     } else {
-      for (var item in _users!) {
-        if (item['email'] == email) {
-          _user = User(item['uid'], item['email'], item['username'],
-              item['image'], item['likes'] ?? []);
-          _users = null;
+      for (var item in _users) {
+        if (item.email == email) {
+          _user = User(item.uid, item.email, item.username, item.image,
+              item.likes, item.following);
           notifyListeners();
           return;
         }
       }
     }
-
-    return credential.user;
   }
 
   createUser(String email, String password, String name) async {
@@ -58,10 +61,22 @@ class UserProvider extends ChangeNotifier {
       'image': image,
       'uid': credential.user!.uid,
       'likes': [],
+      'followers': []
     });
 
-    _user = User(credential.user!.uid, email, name, image, []);
-    return credential.user;
+    QuerySnapshot<Map<String, dynamic>> database =
+        await FirebaseFirestore.instance.collection('users').get();
+
+    List<Map<String, dynamic>> data =
+        database.docs.map((doc) => doc.data()).toList();
+    bool found = false;
+    for (var item in data) {
+      _users.add(User(item['uid'], item['email'], item['username'],
+          item['image'], item['likes'] ?? [], item['following'] ?? []));
+    }
+
+    _user = User(credential.user!.uid, email, name, image, [], []);
+    notifyListeners();
   }
 
   addLike(String id) async {
@@ -79,6 +94,24 @@ class UserProvider extends ChangeNotifier {
         .collection('users')
         .doc(_user!.uid)
         .update({'likes': _user!.likes});
+    notifyListeners();
+  }
+
+  follow(String id) async {
+    _user!.following.add(id);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .update({'following': _user!.following});
+    notifyListeners();
+  }
+
+  unFollow(String id) async {
+    _user!.following.remove(id);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .update({'following': _user!.following});
     notifyListeners();
   }
 

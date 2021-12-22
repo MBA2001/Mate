@@ -67,11 +67,18 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               // const SizedBox(width: 10,),
-              Text(post.creatorName),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/othersProfile',arguments: {
+                    'username':post.creatorName
+                  });
+                },
+                child: Text(post.creatorName,style: const TextStyle(color: Colors.white),),
+              ),
               // const SizedBox(width: 160,),
               Provider.of<UserProvider>(context, listen: false)
                           .user!
-                          .username! ==
+                          .username ==
                       post.creatorName
                   ? IconButton(
                       onPressed: () => _alertDialog(context),

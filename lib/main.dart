@@ -1,6 +1,7 @@
 import 'package:final_project/pages/account_settings.dart';
 import 'package:final_project/pages/home.dart';
 import 'package:final_project/pages/login.dart';
+import 'package:final_project/pages/other_user_profile.dart';
 import 'package:final_project/pages/profile.dart';
 import 'package:final_project/pages/register.dart';
 import 'package:final_project/pages/search.dart';
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LogIn(),
           '/register': (context) => SignUp(),
           '/settings': (context) => const Settings(),
+          '/accountSettings': (context)=> Accountsettings(),
+          '/othersProfile': (context)=> OthersProfile(),
         },
       ),
     );

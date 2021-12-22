@@ -3,11 +3,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class User {
-  String? uid;
-  String? email;
-  String? username;
-  String? image;
+  String uid;
+  String email;
+  String username;
+  String image;
   List likes;
+  List following;
 
-  User(this.uid,this.email,this.username,this.image,this.likes);
+  User(this.uid,this.email,this.username,this.image,this.likes,this.following);
 }
