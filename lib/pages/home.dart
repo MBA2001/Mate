@@ -20,10 +20,13 @@ class _HomeState extends State<Home> {
   final titleController = TextEditingController();
   final bodyController = TextEditingController();
 
-  _displayDialog(BuildContext context,PostsProvider postsProvider,User user) async {
+  _displayDialog(
+      BuildContext context, PostsProvider postsProvider, User user) async {
     return showDialog(
         context: context,
-        builder: (context,) {
+        builder: (
+          context,
+        ) {
           return AlertDialog(
             title: Text('Add Post'),
             content: Column(
@@ -48,7 +51,8 @@ class _HomeState extends State<Home> {
               TextButton(
                 child: const Text('Add Post'),
                 onPressed: () async {
-                  await postsProvider.addPost(titleController.text,bodyController.text,user.username,user.image);
+                  await postsProvider.addPost(titleController.text,
+                      bodyController.text, user.username, user.image);
                   titleController.clear();
                   bodyController.clear();
                   Navigator.of(context).pop();
@@ -71,6 +75,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context, listen: false).user!;
+
     return Column(
       children: [
         Container(
@@ -78,9 +84,9 @@ class _HomeState extends State<Home> {
           width: 341,
           child: ElevatedButton.icon(
             onPressed: () {
-              final postsProvider = Provider.of<PostsProvider>(context,listen: false);
-              User user = Provider.of<UserProvider>(context,listen: false).user!;
-              _displayDialog(context,postsProvider,user);
+              final postsProvider =
+                  Provider.of<PostsProvider>(context, listen: false);
+              _displayDialog(context, postsProvider, user);
             },
             icon: const Icon(Icons.add),
             label: const Text('Create Post'),
@@ -88,11 +94,14 @@ class _HomeState extends State<Home> {
         ),
         Consumer<PostsProvider>(
           builder: (context, PostsProvider data, child) {
-            List<Post> posts = data.posts;
+            List<Post> posts = [];
+            for (Post item in data.posts) {
+              if (user.following.contains(item.creatorName) || user.username == item.creatorName) {
+                posts.add(item);
+              }
+            }
             if (posts.isEmpty) {
               return Container(
-                margin: const EdgeInsetsDirectional.all(50),
-                child: const CircularProgressIndicator(),
               );
             } else {
               return Expanded(

@@ -86,10 +86,10 @@ class _OthersProfileState extends State<OthersProfile> {
             ),
             const SizedBox(height: 20),
             
-            userProvider.user!.following.contains(user!.uid)
+            userProvider.user!.following.contains(user!.username)
                 ? ElevatedButton.icon(
                     onPressed: () async {
-                      await userProvider.unFollow(user!.uid);
+                      await userProvider.unFollow(user!.username);
                       setState(() {});
                     },
                     icon: const Icon(Icons.remove),
@@ -97,7 +97,7 @@ class _OthersProfileState extends State<OthersProfile> {
                   )
                 : ElevatedButton.icon(
                     onPressed: () async {
-                      await userProvider.follow(user!.uid);
+                      await userProvider.follow(user!.username);
                       setState(() {});
                     },
                     icon: const Icon(Icons.add),

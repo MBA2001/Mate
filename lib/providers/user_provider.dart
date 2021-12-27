@@ -26,11 +26,13 @@ class UserProvider extends ChangeNotifier {
           _user = User(item['uid'], item['email'], item['username'],
               item['image'], item['likes'] ?? [], item['following'] ?? []);
           found = true;
+        } else {
+          _users.add(User(item['uid'], item['email'], item['username'],
+              item['image'], item['likes'] ?? [], item['following'] ?? []));
         }
-        _users.add(User(item['uid'], item['email'], item['username'],
-            item['image'], item['likes'] ?? [], item['following'] ?? []));
       }
       if (found) {
+        print(_users);
         notifyListeners();
         return;
       }
@@ -63,16 +65,17 @@ class UserProvider extends ChangeNotifier {
       'likes': [],
       'followers': []
     });
-
     QuerySnapshot<Map<String, dynamic>> database =
         await FirebaseFirestore.instance.collection('users').get();
-
     List<Map<String, dynamic>> data =
         database.docs.map((doc) => doc.data()).toList();
     bool found = false;
     for (var item in data) {
-      _users.add(User(item['uid'], item['email'], item['username'],
-          item['image'], item['likes'] ?? [], item['following'] ?? []));
+      User user = User(item['uid'], item['email'], item['username'],
+          item['image'], item['likes'] ?? [], item['following'] ?? []);
+      if (user.email != email) {
+        _users.add(user);
+      }
     }
 
     _user = User(credential.user!.uid, email, name, image, [], []);
@@ -97,8 +100,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  follow(String id) async {
-    _user!.following.add(id);
+  follow(String username) async {
+    _user!.following.add(username);
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_user!.uid)
@@ -106,8 +109,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  unFollow(String id) async {
-    _user!.following.remove(id);
+  unFollow(String username) async {
+    _user!.following.remove(username);
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_user!.uid)
@@ -118,6 +121,7 @@ class UserProvider extends ChangeNotifier {
   signOut() async {
     await _auth.signOut();
     _user = null;
+    _users.clear();
 
     notifyListeners();
   }
