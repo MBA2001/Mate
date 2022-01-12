@@ -107,8 +107,8 @@ class _HomeState extends State<Home> {
               return Expanded(
                 child: ListView.builder(
                     itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      return PostCard(index: index, post: posts[index]);
+                    itemBuilder: (context,index) {
+                      return PostCard(post: posts[index]);
                     }),
               );
             }

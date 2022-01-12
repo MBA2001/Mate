@@ -65,7 +65,7 @@ class Profile extends StatelessWidget {
               child: ListView.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                    return PostCard(index: index, post: posts[index]);
+                    return PostCard(post: posts[index]);
                   }),
             );
           }),

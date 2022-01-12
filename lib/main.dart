@@ -1,4 +1,5 @@
 import 'package:final_project/pages/account_settings.dart';
+import 'package:final_project/pages/comment_page.dart';
 import 'package:final_project/pages/home.dart';
 import 'package:final_project/pages/login.dart';
 import 'package:final_project/pages/other_user_profile.dart';

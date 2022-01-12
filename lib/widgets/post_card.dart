@@ -1,18 +1,22 @@
 import 'package:final_project/models/post.dart';
+import 'package:final_project/pages/comment_page.dart';
 import 'package:final_project/providers/posts_provider.dart';
 import 'package:final_project/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-class PostCard extends StatelessWidget {
-  final int index;
+class PostCard extends StatefulWidget {
   final Post post;
   const PostCard({
     Key? key,
-    required this.index,
     required this.post,
   }) : super(key: key);
 
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
   _alertDialog(context) {
     return showDialog(
         context: context,
@@ -31,10 +35,10 @@ class PostCard extends StatelessWidget {
                 label: const Text('No'),
               ),
               TextButton.icon(
-                onPressed: () {
+                onPressed: () async{
                   final postsProvider =
                       Provider.of<PostsProvider>(context, listen: false);
-                  postsProvider.deletePost(index);
+                  await postsProvider.deletePost(widget.post.id);
                   Navigator.pop(context);
                 },
                 icon: const Icon(Icons.delete),
@@ -63,23 +67,25 @@ class PostCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
                   radius: 25,
-                  backgroundImage: NetworkImage(post.creatorImage),
+                  backgroundImage: NetworkImage(widget.post.creatorImage),
                 ),
               ),
               // const SizedBox(width: 10,),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/othersProfile',arguments: {
-                    'username':post.creatorName
-                  });
+                  Navigator.pushNamed(context, '/othersProfile',
+                      arguments: {'username': widget.post.creatorName});
                 },
-                child: Text(post.creatorName,style: const TextStyle(color: Colors.white),),
+                child: Text(
+                  widget.post.creatorName,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
               // const SizedBox(width: 160,),
               Provider.of<UserProvider>(context, listen: false)
                           .user!
                           .username ==
-                      post.creatorName
+                      widget.post.creatorName
                   ? IconButton(
                       onPressed: () => _alertDialog(context),
                       icon: const Icon(Icons.delete),
@@ -99,7 +105,7 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8),
             alignment: Alignment.centerLeft,
             child: Text(
-              post.title,
+              widget.post.title,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -109,25 +115,27 @@ class PostCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 8),
             alignment: Alignment.centerLeft,
-            child: Text(post.body),
+            child: Text(widget.post.body),
           ),
           ButtonBar(
             alignment: MainAxisAlignment.start,
             children: [
-              user!.likes.contains(post.id)
+              user!.likes.contains(widget.post.id)
                   ? TextButton.icon(
                       onPressed: () async {
                         final postsProvider =
                             Provider.of<PostsProvider>(context, listen: false);
-                        await postsProvider.removeLike(post.id, index);
-                        await userProvider.removeLike(post.id);
+                        await postsProvider.removeLike(widget.post.id);
+                        await userProvider.removeLike(widget.post.id);
+                        setState(() {
+                        });
                       },
                       icon: const Icon(
                         Icons.favorite,
                         color: Colors.red,
                       ),
                       label: Text(
-                        '${post.likeCount}',
+                        '${widget.post.likeCount}',
                         style: const TextStyle(color: Colors.white),
                       ),
                     )
@@ -135,26 +143,34 @@ class PostCard extends StatelessWidget {
                       onPressed: () async {
                         final postsProvider =
                             Provider.of<PostsProvider>(context, listen: false);
-                        await postsProvider.addLike(post.id, index);
-                        await userProvider.addLike(post.id);
+                        await postsProvider.addLike(widget.post.id);
+                        await userProvider.addLike(widget.post.id);
+                        setState(() {
+                        });
                       },
                       icon: const Icon(
                         Icons.favorite_border,
                         color: Colors.grey,
                       ),
                       label: Text(
-                        '${post.likeCount}',
+                        '${widget.post.likeCount}',
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Comments(comments: widget.post.comments,postId: widget.post.id,)));
+                },
                 icon: const Icon(
                   Icons.comment,
                   color: Colors.grey,
                 ),
                 label: Text(
-                  '${post.commentCount}',
+                  '${widget.post.commentCount}',
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),

@@ -1,3 +1,5 @@
+import 'package:final_project/models/comment.dart';
+
 class Post {
   String title;
   String body;
@@ -7,5 +9,6 @@ class Post {
   int likeCount;
   DateTime creationDate;
   String id;
-  Post(this.id,this.title,this.body,this.creatorName,this.creatorImage,this.commentCount,this.likeCount,this.creationDate);
+  List<Comment> comments;
+  Post(this.id,this.title,this.body,this.creatorName,this.creatorImage,this.commentCount,this.likeCount,this.creationDate,this.comments);
 }

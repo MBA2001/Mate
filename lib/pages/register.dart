@@ -139,19 +139,19 @@ class _SignUpState extends State<SignUp> {
             height: 10,
           ),
           SimpleTextField(
-            Controller: usernameController,
+            controller: usernameController,
             hintText: 'Username',
             errorText: _validateName ? 'Username already in use' : null,
             obscure: false,
           ),
           SimpleTextField(
-            Controller: emailController,
+            controller: emailController,
             errorText: _validate ? emailMessage : null,
             hintText: 'Email',
             obscure: false,
           ),
           SimpleTextField(
-            Controller: passwordController,
+            controller: passwordController,
             errorText: _validatePassword
                 ? 'Password should be at least 6 characters'
                 : null,
@@ -159,7 +159,7 @@ class _SignUpState extends State<SignUp> {
             obscure: true,
           ),
           SimpleTextField(
-            Controller: confirmPassController,
+            controller: confirmPassController,
             errorText: _validateConfirmPass ? _passwordMessage : null,
             hintText: 'Confirm Password',
             obscure: true,

@@ -83,13 +83,13 @@ class _LogInState extends State<LogIn> {
               height: 40,
             ),
             SimpleTextField(
-              Controller: emailController,
+              controller: emailController,
               errorText: _validateEmail ? 'Please enter a valid email' : null,
               hintText: 'email',
               obscure: false,
             ),
             SimpleTextField(
-              Controller: passwordController,
+              controller: passwordController,
               errorText: _validatePass ? _validatePassText : null,
               hintText: 'password',
               obscure: true,
