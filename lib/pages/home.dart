@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/widgets/post_card.dart';
 
-//TODO: Make like and comment work and the home page will be done
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
