@@ -102,11 +102,21 @@ class _HomeState extends State<Home> {
               return  const Center(child: Padding(padding:EdgeInsets.all(20),child: Text('you dont have any posts yet.'),),);
             } else {
               return Expanded(
-                child: ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context,index) {
-                      return PostCard(post: posts[index]);
-                    }),
+                child: RefreshIndicator(
+                  onRefresh: ()async {
+                    await Provider.of<PostsProvider>(context,listen: false).removeData();
+                    await Provider.of<PostsProvider>(context,listen: false).initializePosts();
+                    await Future.delayed(const Duration(seconds: 1));
+                    setState(() {
+                      
+                    });
+                  },
+                  child: ListView.builder(
+                      itemCount: posts.length,
+                      itemBuilder: (context,index) {
+                        return PostCard(post: posts[index]);
+                      }),
+                ),
               );
             }
           },

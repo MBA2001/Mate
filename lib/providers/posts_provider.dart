@@ -76,6 +76,7 @@ class PostsProvider extends ChangeNotifier {
     _notifications.sort((a, b) => a.creationDate.compareTo(b.creationDate));
     _notifications = _notifications.reversed.toList();
 
+    print(_comments);
     notifyListeners();
   }
 
