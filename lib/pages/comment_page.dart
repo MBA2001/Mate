@@ -38,7 +38,7 @@ class _CommentsState extends State<Comments> {
                 onPressed: () async{
                   final postsProvider =
                       Provider.of<PostsProvider>(context, listen: false);
-                  await postsProvider.deleteComment(id, widget.postId);
+                  await postsProvider.deleteComment(id, widget.postId, Provider.of<UserProvider>(context,listen: false).user!.username);
                   setState(() {
                     
                   });

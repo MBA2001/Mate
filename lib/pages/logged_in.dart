@@ -22,7 +22,7 @@ class _LoggedInState extends State<LoggedIn> {
 
   final List<String> titles = ['Home', 'Search', 'Notifications', 'Profile'];
 
-  final List<Widget> pages = [Home(), Search(), Notifications(), Profile()];
+  final List<Widget> pages = [Home(), Search(), Notifs(), Profile()];
 
   @override
   Widget build(BuildContext context) {

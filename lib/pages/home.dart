@@ -99,8 +99,7 @@ class _HomeState extends State<Home> {
               }
             }
             if (posts.isEmpty) {
-              return Container(
-              );
+              return  const Center(child: Padding(padding:EdgeInsets.all(20),child: Text('you dont have any posts yet.'),),);
             } else {
               return Expanded(
                 child: ListView.builder(

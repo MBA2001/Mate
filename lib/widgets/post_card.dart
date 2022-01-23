@@ -125,7 +125,7 @@ class _PostCardState extends State<PostCard> {
                       onPressed: () async {
                         final postsProvider =
                             Provider.of<PostsProvider>(context, listen: false);
-                        await postsProvider.removeLike(widget.post.id);
+                        await postsProvider.removeLike(widget.post.id,user.username);
                         await userProvider.removeLike(widget.post.id);
                         setState(() {
                         });
@@ -143,7 +143,7 @@ class _PostCardState extends State<PostCard> {
                       onPressed: () async {
                         final postsProvider =
                             Provider.of<PostsProvider>(context, listen: false);
-                        await postsProvider.addLike(widget.post.id);
+                        await postsProvider.addLike(widget.post.id,user.username);
                         await userProvider.addLike(widget.post.id);
                         setState(() {
                         });
