@@ -3,6 +3,7 @@ import 'package:final_project/models/user.dart';
 import 'package:final_project/providers/posts_provider.dart';
 import 'package:final_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/widgets/post_card.dart';
 
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
           context,
         ) {
           return AlertDialog(
-            title: Text('Add Post'),
+            title: const Text('Add Post'),
             content: Column(
               children: [
                 TextField(
@@ -49,11 +50,22 @@ class _HomeState extends State<Home> {
               TextButton(
                 child: const Text('Add Post'),
                 onPressed: () async {
-                  await postsProvider.addPost(titleController.text,
-                      bodyController.text, user.username, user.image);
-                  titleController.clear();
-                  bodyController.clear();
-                  Navigator.of(context).pop();
+                  final filter = ProfanityFilter();
+                  if (filter.hasProfanity(titleController.text) || filter.hasProfanity(bodyController.text)) {
+                    const snack = SnackBar(
+                        content:
+                            Text('Profanity isn\'t allowed on this platform'));
+                    ScaffoldMessenger.of(context).showSnackBar(snack);
+                    titleController.clear();
+                    bodyController.clear();
+                    Navigator.of(context).pop();
+                  } else {
+                    await postsProvider.addPost(titleController.text,
+                        bodyController.text, user.username, user.image);
+                    titleController.clear();
+                    bodyController.clear();
+                    Navigator.of(context).pop();
+                  }
                 },
               )
             ],
@@ -94,26 +106,32 @@ class _HomeState extends State<Home> {
           builder: (context, PostsProvider data, child) {
             List<Post> posts = [];
             for (Post item in data.posts) {
-              if (user.following.contains(item.creatorName) || user.username == item.creatorName) {
+              if (user.following.contains(item.creatorName) ||
+                  user.username == item.creatorName) {
                 posts.add(item);
               }
             }
             if (posts.isEmpty) {
-              return  const Center(child: Padding(padding:EdgeInsets.all(20),child: Text('you dont have any posts yet.'),),);
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text('you dont have any posts yet.'),
+                ),
+              );
             } else {
               return Expanded(
                 child: RefreshIndicator(
-                  onRefresh: ()async {
-                    await Provider.of<PostsProvider>(context,listen: false).removeData();
-                    await Provider.of<PostsProvider>(context,listen: false).initializePosts();
+                  onRefresh: () async {
+                    await Provider.of<PostsProvider>(context, listen: false)
+                        .removeData();
+                    await Provider.of<PostsProvider>(context, listen: false)
+                        .initializePosts();
                     await Future.delayed(const Duration(seconds: 1));
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                   child: ListView.builder(
                       itemCount: posts.length,
-                      itemBuilder: (context,index) {
+                      itemBuilder: (context, index) {
                         return PostCard(post: posts[index]);
                       }),
                 ),
